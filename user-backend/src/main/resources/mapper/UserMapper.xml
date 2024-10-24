@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.UserMapper">
+
+    <!--    用户通过手机号登陆-->
+    <select id="loginByPhone" resultType="com.cykj.pojo.User">
+        select * from user where phone = #{phone} and password = #{password}
+    </select>
+
+    <!--    用户通过身份证号登陆-->
+    <select id="loginByIdNumber" resultType="com.cykj.pojo.User">
+        select * from user where id_number = #{idNumber} and password = #{password}
+    </select>
+
+
+    <!-- 用户注册 -->
+    <insert id="register" parameterType="com.cykj.pojo.User">
+        INSERT INTO User (phone, id_number, name, gender, age, password, is_deleted)
+        VALUES (#{phone}, #{idNumber}, #{name}, #{gender}, #{age}, #{password}, 0)
+    </insert>
+
+    <!-- 更新用户余额 -->
+    <update id="updateUserBalance" parameterType="com.cykj.pojo.Orders">
+        UPDATE User
+        SET balance = balance + #{totalAmount}
+        WHERE user_id = (SELECT user_id FROM Orders WHERE order_number = #{orderNumber});
+    </update>
+
+<!--    查询用户是否购买套餐，返回套餐id-->
+    <select id="getPackageId" resultType="java.lang.Long">
+        select package_id from Order_Detail
+        where order_number = (
+            select order_number from Orders where user_id = #{userId} limit 1
+            )
+    </select>
+
+
+
+</mapper>

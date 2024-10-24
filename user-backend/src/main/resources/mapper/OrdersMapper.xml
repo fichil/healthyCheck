@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.OrdersMapper">
+
+
+    <!-- 新增订单 -->
+    <insert id="createOrder" parameterType="com.cykj.pojo.Orders">
+        INSERT INTO Orders (order_number, user_id, order_date, total_amount)
+        VALUES (#{orderNumber}, #{userId}, NOW(), #{totalAmount});
+    </insert>
+
+    <!-- 修改订单状态为已支付 -->
+    <update id="updateOrder" parameterType="com.cykj.pojo.Orders">
+        UPDATE Orders
+        SET payment_status = '已支付'
+        WHERE order_number = #{orderNumber}
+    </update>
+
+    <!--    查询用户-->
+    <select id="findByOrderNumber" resultType="com.cykj.pojo.Orders">
+        select * from Order where order_number = #{orderNumber}
+    </select>
+
+    <!--    添加套餐详情-->
+    <insert id="addOrderDetail" parameterType="com.cykj.pojo.OrderDetail">
+        INSERT INTO Order_Detail (order_number, package_id,type)
+        VALUES (#{orderNumber},#{packageId},#{type})
+    </insert>
+
+    <!--    根据用户id查询已支付的套餐订单-->
+    <select id="getOrdersByUserId" resultType="com.cykj.pojo.Orders">
+        select o.*
+        from Orders o
+                 join Order_Detail od on o.order_number = od.order_number
+        where o.user_id = #{userId}
+    </select>
+    <!--    通过订单号查询订单id-->
+    <select id="getOrderIdByOrderNumber" resultType="java.lang.Long">
+        select order_id from Orders where order_number = #{orderNumber}
+    </select>
+
+</mapper>

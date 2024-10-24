@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.PackageMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap id="PackageResultMap" type="com.cykj.pojo.Packages">
+        <id property="packageId" column="package_id" />
+        <result property="packageName" column="package_name" />
+        <result property="price" column="package_price" />
+        <result property="isDeleted" column="is_deleted" />
+        <result property="img" column="img" />
+
+        <!-- 嵌套查询，获取该套餐的所有详情 -->
+        <collection property="items" ofType="com.cykj.pojo.Item">
+            <id property="itemId" column="item_id" />
+            <result property="itemName" column="item_name" />
+            <result property="price" column="item_price" />
+        </collection>
+    </resultMap>
+
+    <!-- 查询所有的套餐，并把对应的项目详情封装到项目，再把对应的项目封装到套餐 -->
+    <select id="getAllPackages" resultMap="PackageResultMap">
+        SELECT
+        p.package_id,
+        p.package_name,
+        p.price AS package_price,
+        p.is_deleted,
+        p.img,
+        i.item_id,
+        i.item_name,
+        i.price AS item_price
+        FROM
+        Package p
+        LEFT JOIN
+        Package_Item_Relation pir ON p.package_id = pir.package_id
+        LEFT JOIN
+        Item i ON pir.item_id = i.item_id
+        WHERE
+        p.is_deleted = 0
+        ORDER BY
+        p.package_id;
+    </select>
+
+    <!--    根据订单号查询套餐-->
+    <select id="getPackageByOrderNumber" resultType="com.cykj.pojo.Packages">
+        select * from Package
+        where package_id = (select package_id from Order_Detail
+                            where order_number = #{orderNumber})
+    </select>
+</mapper>
