@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.UserMapper">
+
+    <!--    添加用户-->
+    <insert id="addUser" parameterType="com.cykj.pojo.User">
+        INSERT INTO User (phone, id_number,name,gender,age,password, is_deleted)
+        VALUES (#{phone}, #{idNumber},#{name},#{gender},#{age},#{password},#{isDeleted})
+    </insert>
+
+    <!--    修改用户信息-->
+    <update id="updateUserById" parameterType="com.cykj.pojo.User">
+        UPDATE User SET phone = #{phone},
+                        id_number = #{idNumber},
+                        name = #{name},
+                        gender = #{gender},
+                        age = #{age},
+                        password = #{password},
+                        is_deleted = #{isDeleted}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+    <!--    根据用户姓名查找用户信息-->
+    <select id="getUserByNameLike" resultType="com.cykj.pojo.User">
+        select * from User
+        where name like CONCAT('%', #{userName}, '%')
+    </select>
+
+    <!--    修改用户余额-->
+    <update id="updateUserBalance" parameterType="com.cykj.pojo.User">
+        UPDATE User SET balance = #{balance}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+    <!--     根据id查找用户-->
+    <select id="getUserById" resultType="com.cykj.pojo.User">
+        select * from User
+        where user_id = #{userId}
+    </select>
+
+
+</mapper>

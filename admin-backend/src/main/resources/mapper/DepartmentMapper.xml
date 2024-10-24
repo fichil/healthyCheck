@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.DepartmentMapper">
+
+    <!--    获取所有科室-->
+    <select id="getAllDepartment" resultType="com.cykj.pojo.Department">
+        select * from Department
+    </select>
+
+    <!--    修改科室信息-->
+    <update id="updateDepartmentById" parameterType="com.cykj.pojo.Department">
+        UPDATE Department SET department_name = #{departmentName},is_deleted = #{isDeleted}
+        WHERE
+            department_id = #{departmentId}
+    </update>
+
+    <!-- 根据科室名模糊搜索 -->
+    <select id="getDepartmentByNameLike" resultType="com.cykj.pojo.Department">
+        select * from Department
+        where department_name like CONCAT('%', #{departmentName}, '%')
+    </select>
+
+    <!-- 添加科室 -->
+    <insert id="addDepartment" parameterType="com.cykj.pojo.Department">
+        INSERT INTO Department (department_name, is_deleted)
+        VALUES (#{departmentName}, #{isDeleted})
+    </insert>
+
+
+</mapper>

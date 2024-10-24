@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.ResultMapper">
+
+    <!--   插入细项检查单 -->
+    <insert id="insertDetailResult" parameterType="com.cykj.pojo.DetailResult">
+        insert into Detail_Result (detail_item_id,order_id)
+        values (#{detailItemId},#{orderId})
+    </insert>
+
+    <!--    插入项目检查单-->
+    <insert id="insertItemSummary" parameterType="com.cykj.pojo.ItemSummary">
+        insert into Item_Summary (order_id,item_id)
+        values (#{orderId},#{itemId})
+    </insert>
+
+    <!--  插入体检总结检查单  -->
+    <insert id="insertSummary" parameterType="com.cykj.pojo.Summary">
+        insert into Summary (order_id) values (#{orderId})
+    </insert>
+
+    <!--    设置细项检查结果    -->
+    <update id="updateDetailResult" parameterType="com.cykj.pojo.DetailResult">
+        update Detail_Result set
+                                 result = #{result},
+                                 doctor = #{doctor},
+                                 date = NOW()
+        where result_id = #{resultId}
+    </update>
+
+    <!--    设置项目检查结果-->
+    <update id="updateItemSummary" parameterType="com.cykj.pojo.ItemSummary">
+        update Item_Summary set
+                                summary = #{summary},
+                                doctor = #{doctor},
+                                date = NOW()
+        where summary_id = #{summaryId}
+    </update>
+
+    <!--    设置体检总结检查结果-->
+    <update id="updateSummary" parameterType="com.cykj.pojo.Summary">
+        update Summary set
+                           result_description = #{resultDescription},
+                           doctor = #{doctor},
+                           date = NOW()
+    </update>
+<!--    根据订单id和项目id查询项目结果id-->
+    <select id="getItemSummaryIdByOrderIdAndItemId" resultType="java.lang.Long">
+        select summary_id from Item_Summary
+        where order_id = #{orderId} and item_id = #{itemId}
+    </select>
+<!--    通过细项id、订单号查询细项主键-->
+    <select id="getDetailResultIdByDetailItemIdAndOrderId" resultType="java.lang.Long">
+        select result_id from Detail_Result
+        where detail_item_id = #{detailItemId} and order_id = #{orderId}
+    </select>
+
+
+</mapper>

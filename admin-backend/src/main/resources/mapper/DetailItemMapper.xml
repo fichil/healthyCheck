@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.DetailItemMapper">
+
+    <!--    获取所有细项-->
+    <select id="getAllDetail" resultType="com.cykj.pojo.DetailItem">
+        select * from Detail_Item
+    </select>
+
+    <!--    修改细项信息-->
+    <update id="updateDetailItemById" parameterType="com.cykj.pojo.DetailItem">
+        UPDATE Detail_Item SET detail_item_name = #{detailItemName},
+                               unit = #{unit},
+                               upper_limit = #{upperLimit},
+                               lower_limit = #{lowerLimit},
+                               is_deleted = #{isDeleted}
+        WHERE
+            detail_item_id = #{detailItemId}
+    </update>
+
+    <!-- 根据细项名称模糊搜索 -->
+    <select id="getDetailItemByNameLike" resultType="com.cykj.pojo.DetailItem">
+        select * from Detail_Item
+        where detail_item_name like CONCAT('%', #{detailItemName}, '%')
+    </select>
+
+
+    <!-- 添加细项 -->
+    <insert id="addDetailItem" parameterType="com.cykj.pojo.DetailItem">
+        INSERT INTO Detail_Item (detail_item_name, unit, upper_limit, lower_limit, is_deleted)
+        VALUES (#{detailItemName}, #{unit}, #{upperLimit}, #{lowerLimit}, #{isDeleted})
+    </insert>
+
+<!--    根据项目id查询所有细项-->
+    <select id="getDetailItemsByItemId" resultType="com.cykj.pojo.DetailItem">
+        select * from Detail_Item where detail_item_id in
+        (select detail_item_id from Item_Detail_Relation where item_id = #{itemId})
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cykj.mapper.ItemMapper">
+    <!--    添加项目-->
+    <insert id="addItem" parameterType="com.cykj.pojo.Item">
+        INSERT INTO Item (item_name, price, is_deleted)
+        VALUES (#{itemName}, #{price},#{isDeleted})
+    </insert>
+
+    <!--    修改项目信息-->
+    <update id="updateItemById" parameterType="com.cykj.pojo.Item">
+        UPDATE Item SET item_name = #{itemName},
+                               price = #{price},
+                               is_deleted = #{isDeleted}
+        WHERE
+            item_id = #{itemId}
+    </update>
+
+    <!--    根据项目名称查找项目信息-->
+    <select id="getItemByNameLike" resultType="com.cykj.pojo.Item">
+        select * from Item
+        where item_name like CONCAT('%', #{itemName}, '%')
+    </select>
+
+    <!--    根据套餐id查询所有项目-->
+    <select id="getItemsByPackageId" resultType="com.cykj.pojo.Item">
+        select * from Item where item_id in
+                 (select item_id from Package_Item_Relation where package_id = #{packageId})
+    </select>
+</mapper>
